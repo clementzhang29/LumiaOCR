@@ -1,20 +1,21 @@
-# OCR Agent 智能文档解析与知识问答系统
+# LumiaOCR v1.0
 
 作者：张春  
 整理：AI 根据项目文件整理生成  
-更新时间：2026-07-06（Asia/Shanghai）
+版本：v1.0  
+发布日期：2026-07-07（Asia/Shanghai）
 
 ## 项目简介
 
-OCR Agent 是一个面向 PDF、扫描件、科研论文和图文表格混排资料的智能文档解析与 RAG 问答系统。项目基于 FastAPI + Vue 3 构建 Web 工作台，集成 Dolphin-v2、MinerU、Marker、Docling、Surya、PaddleOCR、Nougat 等多种 OCR/文档解析引擎，支持文档自动体检、模型路由、OCR 解析、输出排版、Markdown/HTML 导出和 OCR 后多文档问答。
+LumiaOCR 是一个面向 PDF、扫描件、科研论文和图文表格混排资料的智能文档解析与 RAG 问答系统。项目基于 FastAPI + Vue 3 构建本地化 Web 工作台，集成 Dolphin-v2、MinerU、Marker、Docling、Surya、PaddleOCR、Nougat 等多种 OCR/文档解析引擎，支持文档自动体检、模型路由、OCR 解析、输出排版、Markdown/HTML 导出和 OCR 后多文档问答。
 
 GitHub 仓库：
 
 ```text
-https://github.com/clementzhang29/ocr-agent-document-rag
+https://github.com/clementzhang29/LumiaOCR
 ```
 
-## 核心能力
+## v1.0 定版能力
 
 - 多 PDF 上传与任务队列。
 - PDF 文档体检：页数、文本层、扫描状态、图片、表格、公式、语言和文档类型。
@@ -26,11 +27,13 @@ https://github.com/clementzhang29/ocr-agent-document-rag
 - 支持摘要、翻译、表格提取、素材整理和多文档问答。
 - 支持 OpenAI-compatible Provider 配置。
 - 支持布局感知 HTML 导出。
+- 本地化浏览器运行，前端采用 LumiaOCR 研究工作台视觉风格。
 
 ## 快速启动
 
 ```powershell
-cd C:\Users\35160\Desktop\ocr-harness-v0.1.0
+git clone https://github.com/clementzhang29/LumiaOCR.git
+cd LumiaOCR
 python -m src.web.main
 ```
 
@@ -43,7 +46,13 @@ http://127.0.0.1:8080/
 如果端口被占用：
 
 ```powershell
-python -m uvicorn src.web.app:app --host 127.0.0.1 --port 8091
+python -m uvicorn src.web.app:app --host 127.0.0.1 --port 8092
+```
+
+访问：
+
+```text
+http://127.0.0.1:8092/
 ```
 
 ## 前端构建
@@ -59,13 +68,13 @@ cd ..
 
 | 文档 | 说明 |
 | --- | --- |
-| `docs/PROJECT_INTRO.md` | 完整项目介绍 |
+| `docs/PROJECT_INTRO.md` | LumiaOCR v1.0 完整项目介绍 |
 | `docs/INSTALL_USAGE.md` | 安装与使用文档 |
 | `docs/AI_HANDOFF.md` | AI 交接文档 |
 | `docs/AGENT_BUILD_PROCESS.md` | 智能体构建关键过程文档 |
 | `docs/PITFALLS_AND_SOLUTIONS.md` | 踩过的坑与解决方案 |
 | `docs/RESUME_AND_PORTFOLIO.md` | 项目介绍与简历材料 |
-| `docs/OCR智能体项目介绍.html` | 可离线打开的项目介绍 HTML |
+| `docs/LumiaOCR-v1.0-项目介绍.html` | 可离线打开的项目介绍 HTML |
 
 ## 注意事项
 

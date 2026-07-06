@@ -19,14 +19,14 @@ const providerCount = computed(() => store.providers.length)
 
 const themeOverrides = {
   common: {
-    primaryColor: "#335cff",
-    primaryColorHover: "#254ce6",
-    primaryColorPressed: "#1e3fbf",
-    primaryColorSuppl: "#0f9f8f",
+    primaryColor: "#2457d6",
+    primaryColorHover: "#1d49b8",
+    primaryColorPressed: "#183d99",
+    primaryColorSuppl: "#0d8b7d",
     borderRadius: "8px",
     borderRadiusSmall: "6px",
     fontFamily:
-      'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", sans-serif',
+      '"Noto Sans SC", "Microsoft YaHei", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif',
   },
   Button: {
     borderRadiusMedium: "8px",
@@ -50,14 +50,14 @@ onMounted(() => {
         <div class="app-shell">
           <header class="topbar">
             <div class="topbar-inner">
-              <router-link to="/rag" class="brand nav-link" aria-label="OCR Agent">
+              <router-link to="/rag" class="brand nav-link" aria-label="LumiaOCR">
                 <span class="brand-mark">
                   <NIcon size="20"><DocumentText /></NIcon>
                 </span>
-                <span>OCR Agent</span>
+                <span>LumiaOCR</span>
               </router-link>
 
-              <nav class="topnav">
+              <nav class="topnav" aria-label="主导航">
                 <router-link to="/" class="nav-link">
                   <NButton :type="route.path === '/' || route.path === '/rag' ? 'primary' : 'default'" secondary>
                     <template #icon>

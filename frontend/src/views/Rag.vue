@@ -36,7 +36,6 @@ const status = ref({ documents: [], tasks: [], chunk_count: 0, llm_enabled: fals
 const files = ref([])
 const uploading = ref(false)
 const uploadProgress = ref(0)
-const uploadPhase = ref("idle")
 const uploadStartedAt = ref(0)
 const nowTick = ref(Date.now())
 const strategy = ref("auto")
@@ -47,7 +46,7 @@ const asking = ref(false)
 const messages = ref([
   {
     role: "agent",
-    text: "上传一个或多个 PDF 后，我会自动完成 OCR、写入知识库，然后你可以直接对 OCR 后的文档提问。",
+    text: "上传一个或多个 PDF 后，我会自动完成 OCR、写入知识库，并支持你直接对 OCR 后的文档提问。",
   },
 ])
 const citations = ref([])
@@ -80,13 +79,11 @@ const engineOptions = computed(() => [
 const sortedTasks = computed(() =>
   status.value.tasks.slice().sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0)),
 )
-
 const runningTasks = computed(() =>
   sortedTasks.value.filter((task) => ["queued", "analyzing", "converting"].includes(task.status)),
 )
-
 const completedTasks = computed(() => sortedTasks.value.filter((task) => task.status === "completed"))
-
+const failedTasks = computed(() => sortedTasks.value.filter((task) => task.status === "failed"))
 const selectedDocCount = computed(() => selectedDocIds.value.length || status.value.documents.length)
 
 const uploadElapsed = computed(() => {
@@ -96,7 +93,7 @@ const uploadElapsed = computed(() => {
 
 const overallProgress = computed(() => {
   if (uploading.value) {
-    if (uploadProgress.value < 100) return Math.max(2, Math.round(uploadProgress.value * 0.42))
+    if (uploadProgress.value < 100) return Math.max(3, Math.round(uploadProgress.value * 0.42))
     const waiting = Math.min(18, Math.floor(uploadElapsed.value * 1.8))
     return Math.min(60, 42 + waiting)
   }
@@ -109,10 +106,11 @@ const overallProgress = computed(() => {
 })
 
 const overallLabel = computed(() => {
-  if (uploading.value && uploadProgress.value < 100) return "正在把文件传到本地服务"
-  if (uploading.value) return "文件已到达服务端，正在保存并创建 OCR 队列"
+  if (uploading.value && uploadProgress.value < 100) return "正在接收文档"
+  if (uploading.value) return "已上传，正在创建 OCR 队列"
   if (runningTasks.value.length) return `正在处理 ${runningTasks.value.length} 个 OCR 任务`
-  if (completedTasks.value.length) return "OCR 已完成，可开始问答"
+  if (failedTasks.value.length && !completedTasks.value.length) return "任务需要检查"
+  if (completedTasks.value.length) return "OCR 已完成，可以开始问答"
   return "等待上传文档"
 })
 
@@ -129,7 +127,7 @@ const processFeed = computed(() => {
     })
   }
   for (const task of sortedTasks.value) {
-    const events = (task.events || []).slice(-4)
+    const events = (task.events || []).slice(-5)
     if (!events.length) {
       rows.push({ time: task.created_at, title: task.filename, message: task.stage_message || task.status })
       continue
@@ -144,6 +142,12 @@ const processFeed = computed(() => {
   }
   return rows.slice(0, 18)
 })
+
+const systemMetrics = computed(() => [
+  { label: "文档", value: status.value.documents.length },
+  { label: "知识片段", value: status.value.chunk_count },
+  { label: "运行任务", value: runningTasks.value.length },
+])
 
 function smartProgress(task) {
   const raw = Number(task.progress || 0)
@@ -180,6 +184,10 @@ function formatTime(value) {
   return date.toLocaleTimeString("zh-CN", { hour12: false })
 }
 
+function docTypeLabel(doc) {
+  return doc.source === "ocr" ? "OCR 自动入库" : "手动入库"
+}
+
 async function loadStatus() {
   const { data } = await api.agent.documents()
   status.value = data
@@ -203,17 +211,15 @@ async function uploadForOcr() {
     return
   }
   uploading.value = true
-  uploadPhase.value = "uploading"
   uploadStartedAt.value = Date.now()
   uploadProgress.value = 0
   try {
     const { data } = await api.agent.upload(files.value, strategy.value, preferredEngine.value, (progress) => {
       uploadProgress.value = progress
-      if (progress >= 100) uploadPhase.value = "creating"
     })
     messages.value.push({
       role: "agent",
-      text: `已创建 ${data.tasks.length} 个 OCR 任务。现在会持续刷新智能预估进度，完成后自动进入问答知识库。`,
+      text: `已创建 ${data.tasks.length} 个 OCR 任务。页面会持续刷新智能预估进度，完成后自动进入问答知识库。`,
     })
     files.value = []
     await loadStatus()
@@ -221,7 +227,6 @@ async function uploadForOcr() {
     message.error(error.response?.data?.detail || error.message || "上传失败")
   } finally {
     uploading.value = false
-    uploadPhase.value = "idle"
   }
 }
 
@@ -296,37 +301,53 @@ onUnmounted(() => {
 
 <template>
   <div class="agent-page rise-in">
-    <div class="agent-head">
-      <div>
-        <p class="eyebrow">OCR Document Agent</p>
-        <h1 class="section-title">OCR 智能体工作台</h1>
-        <p class="section-kicker">
-          多文档上传后自动 OCR、自动入库，并对 OCR 后的文档进行问答、翻译、表格提取和素材整合。
+    <section class="agent-hero">
+      <div class="agent-hero-copy">
+        <p class="eyebrow">LumiaOCR v1.0</p>
+        <h1>把 PDF 变成可追问的知识库</h1>
+        <p>
+          多文档上传后自动 OCR、模型路由、过程可视化、结果入库，并支持对 OCR 后内容进行问答、翻译、表格提取和素材整理。
         </p>
-      </div>
-      <div class="agent-status">
-        <div class="status-pill" :class="{ muted: !status.llm_enabled }">
-          <span class="dot"></span>
-          {{ status.llm_enabled ? "已接入大模型" : "本地检索模式" }}
+        <div class="hero-actions">
+          <NButton type="primary" size="large" :disabled="!files.length" :loading="uploading" @click="uploadForOcr">
+            <template #icon><NIcon><CloudUpload /></NIcon></template>
+            {{ uploading ? "正在建队列" : "开始 OCR 入库" }}
+          </NButton>
+          <NButton secondary size="large" @click="loadStatus">
+            <template #icon><NIcon><Refresh /></NIcon></template>
+            刷新状态
+          </NButton>
         </div>
-        <NButton secondary size="small" @click="loadStatus">
-          <template #icon><NIcon><Refresh /></NIcon></template>
-          刷新
-        </NButton>
       </div>
-    </div>
+      <div class="agent-hero-panel">
+        <div class="agent-status-row">
+          <span class="status-pill" :class="{ muted: !status.llm_enabled }">
+            <span class="dot"></span>
+            {{ status.llm_enabled ? "大模型已接入" : "本地检索模式" }}
+          </span>
+          <span class="runtime-label">{{ overallLabel }}</span>
+        </div>
+        <div class="hero-progress-value">{{ overallProgress }}%</div>
+        <NProgress :percentage="overallProgress" :height="10" :processing="uploading || !!runningTasks.length" />
+        <div class="agent-metric-grid">
+          <div v-for="metric in systemMetrics" :key="metric.label" class="agent-metric">
+            <strong>{{ metric.value }}</strong>
+            <span>{{ metric.label }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section class="panel panel-pad agent-live-strip">
       <div class="live-title">
         <div>
-          <strong>{{ overallLabel }}</strong>
+          <strong>实时处理过程</strong>
           <p class="microcopy">
-            这是智能预估进度：真实 OCR 引擎可能按页、按布局、按文字识别分阶段推进，页面会结合后端事件实时调整。
+            这里展示的是智能预估进度：页面会结合上传状态、任务阶段、页面数量和后端事件实时调整，不让用户盲等。
           </p>
         </div>
-        <span>{{ overallProgress }}%</span>
+        <span>{{ overallLabel }}</span>
       </div>
-      <NProgress :percentage="overallProgress" :height="9" :processing="uploading || !!runningTasks.length" />
       <div class="live-feed" v-if="processFeed.length">
         <div v-for="(row, index) in processFeed" :key="`${row.time}-${row.message}-${index}`" class="live-feed-row">
           <span>{{ formatTime(row.time) }}</span>
@@ -334,15 +355,15 @@ onUnmounted(() => {
           <p>{{ row.message }}</p>
         </div>
       </div>
-      <div v-else class="live-feed-empty">选择 PDF 后，这里会实时显示：上传接收、任务创建、文档体检、OCR 识别、质量评分、自动入库。</div>
+      <div v-else class="live-feed-empty">选择 PDF 后，这里会实时显示上传接收、任务创建、文档体检、OCR 识别、质量评分和自动入库。</div>
     </section>
 
     <div class="agent-grid">
       <section class="panel panel-pad agent-upload-panel">
         <div class="panel-title-row">
           <div>
-            <h2 class="subhead">上传并 OCR</h2>
-            <p class="section-kicker">支持一次选择多个 PDF。完成后自动进入右侧知识库，不需要再手动上传 Markdown。</p>
+            <h2 class="subhead">上传与 OCR 路由</h2>
+            <p class="section-kicker">支持一次选择多个 PDF。完成后自动进入右侧知识库，不需要手动上传 Markdown。</p>
           </div>
           <NTag type="info" :bordered="false">自动入库</NTag>
         </div>
@@ -360,7 +381,7 @@ onUnmounted(() => {
                 <NIcon size="30"><CloudUpload /></NIcon>
               </div>
               <strong>{{ files.length ? `已选择 ${files.length} 个文档` : "拖入 PDF，或点击选择文件" }}</strong>
-              <span class="microcopy">上传到 100% 只代表文件传完；下方总进度会继续显示 OCR 智能预估和关键事件。</span>
+              <span class="microcopy">上传到 100% 只代表文件传完；上方总进度会继续显示 OCR 智能预估和关键事件。</span>
             </div>
           </div>
         </NUpload>
@@ -387,7 +408,7 @@ onUnmounted(() => {
         <div class="action-bar">
           <span class="microcopy">不配置大模型也可以 OCR 和本地检索；配置后问答、翻译和整理会更自然。</span>
           <NButton type="primary" size="large" :loading="uploading" :disabled="!files.length" @click="uploadForOcr">
-            {{ uploading ? "正在接收/建队列" : "开始 OCR 入库" }}
+            开始 OCR 入库
           </NButton>
         </div>
       </section>
@@ -409,7 +430,7 @@ onUnmounted(() => {
             />
             <div>
               <strong>{{ doc.filename }}</strong>
-              <span>{{ doc.source === "ocr" ? "OCR 自动入库" : "手动入库" }} · {{ doc.chunks }} chunks · {{ doc.chars }} 字符</span>
+              <span>{{ docTypeLabel(doc) }} · {{ doc.chunks }} chunks · {{ doc.chars }} 字符</span>
             </div>
           </label>
         </div>

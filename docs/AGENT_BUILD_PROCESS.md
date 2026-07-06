@@ -1,8 +1,9 @@
-# OCR 智能体构建关键过程文档
+﻿# OCR 智能体构建关键过程文档
 
 作者：张春  
 整理：AI 根据项目文件整理生成  
-更新时间：2026-07-06（Asia/Shanghai）
+更新时间：2026-07-07（Asia/Shanghai）
+版本：v1.0
 
 ## 1. 构建目标
 
@@ -111,7 +112,7 @@
 并推送到 GitHub 仓库：
 
 ```text
-https://github.com/clementzhang29/ocr-agent-document-rag
+https://github.com/clementzhang29/LumiaOCR
 ```
 
 ## 9. 关键决策总结
@@ -122,3 +123,5 @@ https://github.com/clementzhang29/ocr-agent-document-rag
 - 科研论文要单独处理，因为它对表格、图片、公式和阅读顺序要求更高。
 - OCR 结果应直接进入知识库，否则用户还要自己复制粘贴。
 - 项目文档和交接材料是项目交付的一部分，不是附属品。
+
+

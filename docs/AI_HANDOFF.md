@@ -1,13 +1,14 @@
-# AI 交接文档
+﻿# AI 交接文档
 
 作者：张春  
 整理：AI 根据项目文件整理生成  
-更新时间：2026-07-06（Asia/Shanghai）  
-项目仓库：https://github.com/clementzhang29/ocr-agent-document-rag
+更新时间：2026-07-07（Asia/Shanghai）
+版本：v1.0  
+项目仓库：https://github.com/clementzhang29/LumiaOCR
 
 ## 1. 项目当前状态
 
-项目已经形成可运行的 OCR Agent Web 工作台，主要能力包括：
+项目已经形成可运行的 LumiaOCR Web 工作台，主要能力包括：
 
 - FastAPI 后端服务。
 - Vue 3 + Naive UI 前端。
@@ -116,3 +117,5 @@ GitHub 仓库不包含以下内容：
 - 给每个 OCR 引擎增加可用性检测和健康状态。
 - 引入 OCR 质量评测集，对不同文档类型记录模型效果。
 - 给 HTML 导出增加更精确的版面坐标映射。
+
+

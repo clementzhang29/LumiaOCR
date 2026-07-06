@@ -1,21 +1,22 @@
-# 项目介绍与简历材料
+﻿# 项目介绍与简历材料
 
 作者：张春  
 整理：AI 根据项目文件整理生成  
-更新时间：2026-07-06（Asia/Shanghai）  
-项目仓库：https://github.com/clementzhang29/ocr-agent-document-rag
+更新时间：2026-07-07（Asia/Shanghai）
+版本：v1.0  
+项目仓库：https://github.com/clementzhang29/LumiaOCR
 
 ## 1. 一句话项目介绍
 
-OCR Agent 是一个基于 FastAPI + Vue 3 构建的智能文档解析与 RAG 问答系统，支持多 OCR 模型路由、复杂科研论文图文表格混排解析、OCR 后知识库问答和布局感知 HTML 导出。
+LumiaOCR 是一个基于 FastAPI + Vue 3 构建的智能文档解析与 RAG 问答系统，支持多 OCR 模型路由、复杂科研论文图文表格混排解析、OCR 后知识库问答和布局感知 HTML 导出。
 
 ## 2. 简历版项目描述
 
-独立设计并实现 OCR Agent 智能文档解析与知识问答系统，基于 FastAPI + Vue 3 构建 Web 工作台，集成 Dolphin-v2、MinerU、Marker、Docling、Surya、PaddleOCR、Nougat 等多 OCR/文档解析引擎，支持 PDF 文档自动体检、模型路由、复杂科研论文图文表格混排解析、Markdown/HTML 输出、任务进度可视化及 OCR 结果自动入库。系统内置轻量 RAG 检索与 OpenAI-compatible LLM Provider 接入能力，可对 OCR 后多文档进行问答、摘要、翻译、表格提取、图片素材整理和学术结构重排。项目中解决了大文件 OCR 阻塞 Web 轮询、上传进度与实际处理进度割裂、科研论文表格/图片排版还原不足等问题，通过后台线程化任务、智能预估进度、过程消息反馈和布局感知 HTML 导出提升了可用性与交付质量。
+独立设计并实现 LumiaOCR v1.0 智能文档解析与知识问答系统，基于 FastAPI + Vue 3 构建 Web 工作台，集成 Dolphin-v2、MinerU、Marker、Docling、Surya、PaddleOCR、Nougat 等多 OCR/文档解析引擎，支持 PDF 文档自动体检、模型路由、复杂科研论文图文表格混排解析、Markdown/HTML 输出、任务进度可视化及 OCR 结果自动入库。系统内置轻量 RAG 检索与 OpenAI-compatible LLM Provider 接入能力，可对 OCR 后多文档进行问答、摘要、翻译、表格提取、图片素材整理和学术结构重排。项目中解决了大文件 OCR 阻塞 Web 轮询、上传进度与实际处理进度割裂、科研论文表格/图片排版还原不足等问题，通过后台线程化任务、智能预估进度、过程消息反馈和布局感知 HTML 导出提升了可用性与交付质量。
 
 ## 3. 简历项目条目
 
-项目名称：OCR Agent 智能文档解析与知识问答系统  
+项目名称：LumiaOCR v1.0 智能文档解析与知识问答系统  
 项目角色：独立开发 / 产品设计 / AI 协作实现  
 技术栈：Python、FastAPI、Vue 3、Vite、Naive UI、PyMuPDF、Dolphin-v2、MinerU、Marker、Docling、Surya、PaddleOCR、Nougat、OpenAI-compatible API、RAG
 
@@ -55,3 +56,5 @@ OCR Agent 是一个基于 FastAPI + Vue 3 构建的智能文档解析与 RAG 问
 - 布局感知 HTML 导出。
 - FastAPI + Vue 3 全栈实现。
 - AI 协作开发与完整交付文档。
+
+

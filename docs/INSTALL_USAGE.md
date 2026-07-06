@@ -1,8 +1,9 @@
-# OCR Agent 安装与使用文档
+# LumiaOCR v1.0 安装与使用文档
 
 作者：张春  
 整理：AI 根据项目文件整理生成  
-更新时间：2026-07-06（Asia/Shanghai）
+版本：v1.0  
+更新时间：2026-07-07（Asia/Shanghai）
 
 ## 1. 环境要求
 
@@ -14,14 +15,14 @@
 ## 2. 获取项目
 
 ```powershell
-git clone https://github.com/clementzhang29/ocr-agent-document-rag.git
-cd ocr-agent-document-rag
+git clone https://github.com/clementzhang29/LumiaOCR.git
+cd LumiaOCR
 ```
 
 如果使用本机已整理好的目录：
 
 ```powershell
-cd C:\Users\35160\Desktop\ocr-harness-v0.1.0
+cd C:\Users\35160\Desktop\LumiaOCR
 ```
 
 ## 3. Python 依赖
@@ -65,13 +66,6 @@ npm run build
 cd ..
 ```
 
-开发模式：
-
-```powershell
-cd frontend
-npm run dev
-```
-
 ## 6. 启动后端
 
 默认启动：
@@ -89,19 +83,19 @@ http://127.0.0.1:8080/
 如果 8080 端口被占用：
 
 ```powershell
-python -m uvicorn src.web.app:app --host 127.0.0.1 --port 8091
+python -m uvicorn src.web.app:app --host 127.0.0.1 --port 8092
 ```
 
 访问：
 
 ```text
-http://127.0.0.1:8091/
+http://127.0.0.1:8092/
 ```
 
 ## 7. 使用流程
 
-1. 打开 Web UI。
-2. 进入 OCR 智能体或 RAG 工作台。
+1. 打开 LumiaOCR Web UI。
+2. 进入 OCR 智能体工作台。
 3. 上传一个或多个 PDF。
 4. 系统自动创建任务并分析文档类型。
 5. 前端显示智能预估进度和实时过程消息。
@@ -136,9 +130,9 @@ GET  /api/download/{task_id}
 GET  /api/providers
 POST /api/providers
 POST /api/providers/verify
-POST /api/rag/upload
-POST /api/rag/chat
-GET  /api/rag/docs
+POST /api/agent/upload
+POST /api/agent/action
+GET  /api/agent/documents
 ```
 
 Swagger 文档：
@@ -173,15 +167,17 @@ git status --short --branch
 当前仓库：
 
 ```text
-https://github.com/clementzhang29/ocr-agent-document-rag
+https://github.com/clementzhang29/LumiaOCR
 ```
 
 常用命令：
 
 ```powershell
 git add .
-git commit -m "Update project docs"
-git push
+git commit -m "Release LumiaOCR v1.0"
+git tag v1.0
+git push origin main
+git push origin v1.0
 ```
 
 ## 12. 打包注意事项

@@ -1,8 +1,9 @@
-# 踩过的坑与解决方案
+﻿# 踩过的坑与解决方案
 
 作者：张春  
 整理：AI 根据项目文件整理生成  
-更新时间：2026-07-06（Asia/Shanghai）
+更新时间：2026-07-07（Asia/Shanghai）
+版本：v1.0
 
 ## 1. 上传 100% 不代表 OCR 完成
 
@@ -105,3 +106,5 @@ git config user.email "clementzhang29@users.noreply.github.com"
 - 用向量数据库提升 RAG 质量。
 - 用布局坐标增强图片和表格回填。
 - 给每个 OCR 引擎建立健康检查和示例验证集。
+
+

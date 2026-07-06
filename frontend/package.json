@@ -1,6 +1,6 @@
 {
-  "name": "ocr-harness-frontend",
-  "version": "0.1.0",
+  "name": "lumiaocr-frontend",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
