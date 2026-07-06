@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# Runtime files
+*.log
+*.err.log
+server_runtime*.log
+server_runtime*.err.log
+uploads/
+exports/
+
+# Local model weights and third-party downloads
+models/
+third_party/
+
+# Frontend dependencies and build output
+frontend/node_modules/
+frontend/dist/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Large archives
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
